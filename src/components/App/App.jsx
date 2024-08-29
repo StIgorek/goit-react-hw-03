@@ -6,14 +6,14 @@ import "./App.css";
 import { useState } from "react";
 
 export default function App() {
-  const { contacts, setContacts } = useState(initialContacts);
+  const [contacts, setContacts] = useState(initialContacts);
 
   const addContact = (newContact) => {
     setContacts((prevContacts) => {
       return [...prevContacts, newContact];
     });
   };
-  console.log(contacts);
+  console.log(initialContacts);
 
   return (
     <div>
