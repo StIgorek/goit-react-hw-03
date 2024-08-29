@@ -13,10 +13,15 @@ const UserSchema = Yup.object().shape({
     .required("Required"),
 });
 
-export default function ContactForm() {
-  const handleSubmit = (values, actions) => {
-    console.log(values);
-    actions.resetForm();
+export default function ContactForm(onAdd) {
+  const handleSubmit = (e) => {
+    e.preventDefault;
+    onAdd({
+      name: e.target.elements.name.value,
+      number: e.target.elements.number.value,
+      id: Date.now(),
+    });
+    e.target.reset();
   };
   return (
     <Formik
@@ -30,7 +35,7 @@ export default function ContactForm() {
         actions.resetForm();
       }}
     >
-      <Form className={css.container}>
+      <Form className={css.container} onSubmit={handleSubmit}>
         <div className={css.list}>
           <label>Name</label>
           <Field type="text" name="name" className={css.input} />
@@ -42,7 +47,7 @@ export default function ContactForm() {
             type="text"
             name="number"
             className={css.input}
-            placeholder="0441112233"
+            placeholder="111-22-33"
           />
           <ErrorMessage name="number" component="span" className={css.errMsg} />
         </div>
