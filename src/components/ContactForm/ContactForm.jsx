@@ -5,24 +5,19 @@ import css from "../ContactForm/ContactForm.module.css";
 const UserSchema = Yup.object().shape({
   name: Yup.string()
     .min(3, "Too Short!")
-    .max(50, "Too Long!")
+    .max(25, "Too Long!")
     .required("Required"),
-  number: Yup.number()
-    .min(3, "Too Short!")
-    .max(50, "Too Long!")
+  number: Yup.string()
+    .matches(
+      /^\d{3}-\d{2}-\d{2}$/,
+      "Невірний формат номеру телефону. Введіть у форматі 123-45-67"
+    )
+    .min(9, "Too Short!")
+    .max(9, "Too Long!")
     .required("Required"),
 });
 
-export default function ContactForm(onAdd) {
-  const handleSubmit = (e) => {
-    e.preventDefault;
-    onAdd({
-      name: e.target.elements.name.value,
-      number: e.target.elements.number.value,
-      id: Date.now(),
-    });
-    e.target.reset();
-  };
+export default function ContactForm({ onAdd }) {
   return (
     <Formik
       initialValues={{
@@ -31,11 +26,12 @@ export default function ContactForm(onAdd) {
       }}
       validationSchema={UserSchema}
       onSubmit={(values, actions) => {
-        console.log("SUBMIT");
+        values.id = Date.now();
+        onAdd(values);
         actions.resetForm();
       }}
     >
-      <Form className={css.container} onSubmit={handleSubmit}>
+      <Form className={css.container}>
         <div className={css.list}>
           <label>Name</label>
           <Field type="text" name="name" className={css.input} />
@@ -44,10 +40,10 @@ export default function ContactForm(onAdd) {
         <div className={css.list}>
           <label>Number</label>
           <Field
-            type="text"
+            type="tel"
             name="number"
             className={css.input}
-            placeholder="111-22-33"
+            placeholder="123-45-67"
           />
           <ErrorMessage name="number" component="span" className={css.errMsg} />
         </div>
